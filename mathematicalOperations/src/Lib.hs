@@ -181,16 +181,21 @@ substrings a = tmp a (reverse a) [] where
   tmp [] [] acc = acc
   tmp [] (_:arr) acc = tmp (reverse arr) arr acc
   tmp (x1:arr1) (x2:arr2) acc = tmp arr1 (x2:arr2) ((x1:arr1):acc)
-
-
   -- ex 12 -------------------------------------------------------------------------
-productList a b = zipWith (++) a b
+productElementList :: [a] -> [a] -> [[a]]
+productElementList a b = [ a ++ [x] | x <- b]
+
+productList :: [[a]] -> [a] -> [[a]]
+productList _ [] = []
+productList [] b = [[x] | x <- b]
+productList (x:arr) (y:arr2) = productElementList x (y:arr2) ++ productList arr arr2
+
 
 powerList :: [a] -> [[a]]
-powerList (x:a) = tmp [(x:a)] a where
+powerList a = tmp [] a where
   tmp :: [[a]] -> [a] -> [[a]]
   tmp arr [] = arr
-  tmp arr (x:arr2) = tmp (productList arr [x:arr2]) arr2 ++ arr
+  tmp arr (x:arr2) = arr ++ tmp (productList arr (x:arr2)) arr2
   -- ex 13 -------------------------------------------------------------------------
 rotateLeft :: [a] -> [a]
 rotateLeft (x:arr) = arr ++ [x]
@@ -209,19 +214,19 @@ someFunc :: IO ()
 someFunc = do
   print "This is a library for excercises from lab 1"
   -- ex 1 -------------------------------------------------------------------------
-  putStrLn "ex1 : NAIVE --------------------------------------------------------------------------------------------------------"
-  timeIt $ print (naiveFactorial n)
-  putStrLn "ex1 : WITHOUT STACK"
-  timeIt $ print (betterFactorial n)
-  putStrLn "ex1 : WITH PRODUCT"
-  timeIt $ print (productFactorial n)
-  putStrLn "ex1 : WITH DIVIDE"
-  timeIt $ print (divideFactorial n)
+  --putStrLn "ex1 : NAIVE --------------------------------------------------------------------------------------------------------"
+  --timeIt $ print (naiveFactorial n)
+  --putStrLn "ex1 : WITHOUT STACK"
+  --timeIt $ print (betterFactorial n)
+  --putStrLn "ex1 : WITH PRODUCT"
+  --timeIt $ print (productFactorial n)
+  --putStrLn "ex1 : WITH DIVIDE"
+  --timeIt $ print (divideFactorial n)
   -- ex 2 -------------------------------------------------------------------------
-  putStrLn "ex2 : NAIVE --------------------------------------------------------------------------------------------------------"
-  timeIt $ print (naiveReverse a)
-  putStrLn "ex2 : WITHOUT STACK"
-  timeIt $ print (myReverse a)
+  --putStrLn "ex2 : NAIVE --------------------------------------------------------------------------------------------------------"
+  --timeIt $ print (naiveReverse a)
+  --putStrLn "ex2 : WITHOUT STACK"
+  --timeIt $ print (myReverse a)
   -- ex 3 -------------------------------------------------------------------------
   putStrLn "ex3 : NAIVE --------------------------------------------------------------------------------------------------------"
   timeIt $ print (naiveLeadingZerosNFact a3)
@@ -236,13 +241,13 @@ someFunc = do
   putStrLn "ex5 : Sieve --------------------------------------------------------------------------------------------------------"
   print(sieve 33)
   -- ex 6 -------------------------------------------------------------------------
-  putStrLn "ex6 : Euler --------------------------------------------------------------------------------------------------------"
-  print(eulerTotient a3)
-  eulerTotientPrint a3
-  putStrLn "testing sum - standard"
-  print(naiveEulerSum a3)
-  putStrLn "testing sum - with proof"
-  print(testEulerSum a3)
+  --putStrLn "ex6 : Euler --------------------------------------------------------------------------------------------------------"
+  --print(eulerTotient a3)
+  --eulerTotientPrint a3
+  --putStrLn "testing sum - standard"
+  --print(naiveEulerSum a3)
+  --putStrLn "testing sum - with proof"
+  --print(testEulerSum a3)
   -- ex 7 -------------------------------------------------------------------------
   putStrLn "ex7 : Fibonacci naive -------------------------------------------------------------------------------------------------"
   timeIt $ print(naiveFibonacci n)
@@ -264,17 +269,15 @@ someFunc = do
   putStrLn "ex10 : MORE STUFF -------------------------------------------------------------------------------------------------"
   print (revrev strList)
   -- ex 11 -------------------------------------------------------------------------
-  putStrLn "ex11 : AND OTHER STUFF -------------------------------------------------------------------------------------------------"
+  putStrLn "ex11 : AND OTHER STUFF ---------------------------------------------------------------------------------"
   print(substrings str)
-  -- ex 12 -------------------------------------------------------------------------
-  putStrLn "ex12 : GRRR BASICALY THE SAME -------------------------------------------------------------------------------------------------"
-  print(productList [] grr)
+  putStrLn "ex12 : GRRR BASICALY ----------------------------------------------------------------------------------"
   -- ex 13 -------------------------------------------------------------------------
   putStrLn "ex13 : SOME PERM -------------------------------------------------------------------------------------------------"
-  print(rotateLeft grr)
+  --print(rotateLeft grr)
   print(permu str)
-
-
+  print(powerList str)
+  -- ex 12 -------------------------------------------------------------------------
   where n = 31
         a = [1..23]
         a3 = 18
