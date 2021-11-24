@@ -196,6 +196,13 @@ powerList a = tmp [] a where
   tmp :: [[a]] -> [a] -> [[a]]
   tmp arr [] = arr
   tmp arr (x:arr2) = arr ++ tmp (productList arr (x:arr2)) arr2
+  
+powerList2 :: [a] -> [[a]]  
+powerList2 a = tmp a [] [] where
+  tmp :: [a] -> [a] -> [[a]] -> [[a]]
+  tmp [] a acc = acc
+  tmp (xs:arr) beg acc = tmp arr beg ([beg++arr] ++ acc) ++ tmp arr (beg++[xs]) ([beg ++ (xs:arr)] ++ acc)
+  
   -- ex 13 -------------------------------------------------------------------------
 rotateLeft :: [a] -> [a]
 rotateLeft (x:arr) = arr ++ [x]
@@ -277,6 +284,7 @@ someFunc = do
   --print(rotateLeft grr)
   print(permu str)
   print(powerList str)
+  print(powerList2 str)
   -- ex 12 -------------------------------------------------------------------------
   where n = 31
         a = [1..23]
