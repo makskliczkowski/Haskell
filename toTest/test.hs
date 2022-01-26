@@ -84,6 +84,22 @@ instance Functor Tree where
     fmap f (Leaf a) = Leaf (f a)
     fmap f (Node left middle right) = Node (fmap f left) (f middle) (fmap f right)
 
+-- Foldable
+instance Foldable Tree where
+  foldr :: (a -> b -> b) -> b -> Tree a -> b
+  foldr f z Empty = z
+  foldr f z (Leaf a) = f a z
+  foldr f z (Node left a right) = treeFoldr f (f a (treeFoldr f z right)) left
+  
+  foldl :: (a -> b -> a) -> a -> Tree b -> a
+  foldl f z Empty = z
+  foldl f z (Leaf b) = f z b
+  foldl f z (Node left b right) = treeFoldl f (f (treeFoldl f z left) b) right
+
+
+  -- counts
+  countNodes :: Tree a -> Int
+  countNodes tr = treeFoldr (+) 0 $ treeMap (\x -> 1) tr
 -- -------------------------------------------------------- funktory i inee stwory
 -- join :: (Monad m) => mma -> ma (to jest nasze mu)
 -- for lists -> join [list1, ... , listn]
@@ -119,3 +135,8 @@ move_knight (n,k) (x,y) = map remove_dups [(x+i, y+j) | i <- [1,-1], j <- [2,-2]
 
 move_knight_many 0 size start = [start]
 move_knight_many num size start = remove_dups ((move_knight size start) >>= move_knight_many (num - 1) size)
+
+
+data Vector3 a = Vector3 a a a 
+instance Show a => Show (Vector3 a) where
+  show (Vector3 x1 x2 x3) = "V = [" ++ show x1 ++ ", " ++ show x2 ++ ", " ++ show x3  ++ "]"
