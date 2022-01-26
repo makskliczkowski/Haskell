@@ -1,5 +1,5 @@
 -- HERE WE WILL WRITE THINGS ABOUT HASKELL THAT CAN BE OF MUCH USE
-
+import Data.Set
 -- -------------------------------------------------------- tail recursiveness
 fact n = tmp n n where
     tmp _ 0 = 1
@@ -83,3 +83,39 @@ instance Functor Tree where
     fmap f Empty = Empty
     fmap f (Leaf a) = Leaf (f a)
     fmap f (Node left middle right) = Node (fmap f left) (f middle) (fmap f right)
+
+-- -------------------------------------------------------- funktory i inee stwory
+-- join :: (Monad m) => mma -> ma (to jest nasze mu)
+-- for lists -> join [list1, ... , listn]
+f x = [x+1, x+2]
+g x = [2*x, 3*x]
+
+-- bind w notacji do
+-- return tworzy typ monadyczny
+f = do x<-[1..6]; y<-[1..20]; return (x+y)
+-- jak rozpisac do ?
+-- [1..6] >>= \x-> do (y<-[1..20]; return (x+y)) = [1..6] >>= (\x -> [1..20] >>= \y -> return (x+y)) = {return (x+y) = [x+y]} = [1..6] >>= (\x -> join [[x+1], [x+2], ... [x+20]]) =
+-- join [[1+1, 1+2, 1+3,..., 1+ 20], [2+1, 2+2, ..., 2 + 20]...]
+
+-- EX 3
+-- do x <- mx; f x = mx >>= \x -> (f x) = mx >>= f
+
+-- Zad 8
+move :: Int -> Int -> Maybe Int
+move step pos
+  |  abs (pos + step) > 2 || abs (pos) > 2 = Nothing
+  | otherwise = Just (step + pos)
+
+move_list :: [Int] -> Int -> Maybe Int
+move_list [] x = (Just x)
+move_list (xs:x) n = (move xs n) >>= (move_list x)
+
+remove_dups = head.group.sort
+remove_dups2 = toList.fromList
+-- Zad 9
+move_knight :: (Int, Int) -> (Int, Int) -> [(Int, Int)]
+move_knight (n,k) (x,y) = map remove_dups [(x+i, y+j) | i <- [1,-1], j <- [2,-2], abs(x+i) < n, (x+i)> 0, (y+j) > 0, abs (y+j) < k]
+   ++ [(x+j, y+i) | i <- [1,-1], j<- [2,-2], abs(x+j) < n, abs (y+i) < k, (x+j)> 0, (y+i) > 0]
+
+move_knight_many 0 size start = [start]
+move_knight_many num size start = remove_dups ((move_knight size start) >>= move_knight_many (num - 1) size)
